@@ -1,13 +1,16 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 // Importamos los tres nuevos modulos instalados en el proyecto
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule, MatButton} from '@angular/material/button'
+import { MatButtonModule, MatButton } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatFormFieldModule, MatInputModule, MatCheckboxModule } from '@angular/material';
+import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 
@@ -26,6 +29,7 @@ import { PromotionService } from './services/promotion.service';
 
 import { AppRoutingModule } from './app-routing/app-routing.module';
 import { LeaderService } from './services/leader.service';
+import { LoginComponent } from './login/login.component';
 
 
 @NgModule({
@@ -37,24 +41,33 @@ import { LeaderService } from './services/leader.service';
     FooterComponent,
     AboutComponent,
     ContactComponent,
-    HomeComponent
+    HomeComponent,
+    LoginComponent
   ],
   imports: [
-    BrowserModule, 
+    BrowserModule,
     // Hemos de añadir los módulos a la sección de imports
-    BrowserAnimationsModule, 
+    BrowserAnimationsModule,
     MatToolbarModule,
-    MatListModule,  
-    MatGridListModule, 
-    MatCardModule, 
+    MatListModule,
+    MatGridListModule,
+    MatCardModule,
     MatButtonModule,
-    FlexLayoutModule, 
+    MatDialogModule,
+    MatFormFieldModule, 
+    MatInputModule,
+    MatCheckboxModule, 
+    FormsModule,
+    FlexLayoutModule,
     AppRoutingModule
   ],
   providers: [
-    DishService, 
+    DishService,
     PromotionService,
     LeaderService
+  ],
+  entryComponents: [
+    LoginComponent
   ],
   bootstrap: [AppComponent]
 })
