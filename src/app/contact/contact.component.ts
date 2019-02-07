@@ -16,14 +16,14 @@ export class ContactComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder) {
     this.createForm();
-   }
+  }
 
   ngOnInit() {
   }
 
   createForm() {
     // Defiminimos el modelo de formulario de feedback
-    this.feedbackForm =  this.formBuilder.group({
+    this.feedbackForm = this.formBuilder.group({
       firstname: ['', Validators.required],
       lastname: ['', Validators.required],
       telnum: [0, Validators.required],

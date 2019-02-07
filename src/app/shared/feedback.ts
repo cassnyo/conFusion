@@ -1,10 +1,10 @@
 export class Feedback {
-    firstname: string; 
-    lastname: string; 
-    telnumber: string; 
-    email: string; 
-    agree: boolean; 
-    contacttype: string; 
+    firstname: string;
+    lastname: string;
+    telnumber: string;
+    email: string;
+    agree: boolean;
+    contacttype: string;
     message: string;
 }
 
