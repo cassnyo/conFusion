@@ -9,7 +9,14 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule, MatButton } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { MatFormFieldModule, MatInputModule, MatCheckboxModule, MatSelectModule, MatSlideToggleModule } from '@angular/material';
+import {
+  MatFormFieldModule,
+  MatInputModule,
+  MatCheckboxModule,
+  MatSelectModule,
+  MatSlideToggleModule,
+  MatProgressSpinnerModule
+} from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
@@ -59,6 +66,7 @@ import { LoginComponent } from './login/login.component';
     MatCheckboxModule,
     MatSelectModule,
     MatSlideToggleModule,
+    MatProgressSpinnerModule,
     FormsModule,
     ReactiveFormsModule,
     FlexLayoutModule,

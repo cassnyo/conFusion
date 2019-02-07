@@ -1,8 +1,4 @@
-<div class="container" 
-  fxLayout="row" 
-  fxLayout.sm="column" 
-  fxLayout.xs="column" 
-  fxLayoutAlign.gt-md="space-around center"
+<div class="container" fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign.gt-md="space-around center"
   fxLayoutGap="10px">
 
   <!-- featured dish -->
@@ -19,6 +15,10 @@
       </p>
     </mat-card-content>
   </mat-card>
+  <div fxFlex [hidden]="dish">
+    <mat-spinner></mat-spinner>
+    <h4>Loading ... Please wait</h4>
+  </div>
 
   <!-- featured promotion -->
   <mat-card *ngIf="promotion" fxFlex>
@@ -34,6 +34,10 @@
       </p>
     </mat-card-content>
   </mat-card>
+  <div fxFlex [hidden]="promotion">
+    <mat-spinner></mat-spinner>
+    <h4>Loading ... Please wait</h4>
+  </div>
 
   <!-- featured leader -->
   <mat-card *ngIf="leader" fxFlex>
@@ -49,5 +53,9 @@
       <p>{{leader.description}}</p>
     </mat-card-content>
   </mat-card>
+  <div fxFlex [hidden]="leader">
+    <mat-spinner></mat-spinner>
+    <h4>Loading ... Please wait</h4>
+  </div>
 
 </div>
