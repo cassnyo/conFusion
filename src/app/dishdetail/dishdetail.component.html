@@ -27,7 +27,7 @@
     </mat-card>
   </div>
 
-  <div fxFlex="40">
+  <div fxFlex="40" *ngIf="dish">
     <mat-list>
       <h3>Comments</h3>
       <mat-list-item *ngFor="let comment of dish.comments">
@@ -36,6 +36,38 @@
         <p matLine>-- {{comment.author}} {{comment.date | date}}</p>
       </mat-list-item>
     </mat-list>
+
+    <form novalidate [formGroup]="commentForm" #fform="ngForm" (ngSubmit)="onSubmit()">
+      <!-- author -->
+      <p>
+        <mat-form-field class="full-width">
+          <input matInput formControlName="author" placeholder="Name" type="text" required>
+          <mat-error *ngIf="formErrors.author">
+            {{ formErrors.author }}
+          </mat-error>
+        </mat-form-field>
+      </p>
+
+      <!-- rating -->
+      <p>
+        <mat-slider thumbLabel formControlName="rating" tickInterval="1" value="5" min="0" max="5"></mat-slider>
+      </p>
+
+      <!-- comment -->
+      <p>
+        <mat-form-field class="full-width">
+          <textarea matInput formControlName="comment" placeholder="Your comment" type="text" rows="12" required></textarea>
+          <mat-error *ngIf="formErrors.comment">
+            {{ formErrors.comment }}
+          </mat-error>
+        </mat-form-field>
+      </p>
+
+      <!-- el botón submit estará deshabilitado mientras que el formulario no sea válido -->
+      <button type="submit" mat-button class="background-primary text-floral-white" [disabled]="commentForm.invalid">Submit</button>
+
+    </form>
+
   </div>
 
   <div fxFlex [hidden]="dish">
