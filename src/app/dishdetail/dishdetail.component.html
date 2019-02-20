@@ -35,6 +35,13 @@
         <p matLine>{{comment.rating}} Stars</p>
         <p matLine>-- {{comment.author}} {{comment.date | date}}</p>
       </mat-list-item>
+
+      <!-- preview del nuevo comentario si el formulario es válido -->
+      <mat-list-item *ngIf="commentForm.valid">
+        <p matLine>{{commentForm.get('comment').value}}</p>
+        <p matLine>{{commentForm.get('rating').value}} Stars</p>
+        <p matLine>-- {{commentForm.get('author').value}}</p>
+      </mat-list-item>
     </mat-list>
 
     <form novalidate [formGroup]="commentForm" #fform="ngForm" (ngSubmit)="onSubmit()">

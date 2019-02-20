@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Params, ActivatedRoute } from '@angular/router';
 import { Dish } from '../shared/dish';
 import { DishService } from '../services/dish.service';
@@ -25,8 +25,7 @@ export class DishdetailComponent implements OnInit {
 
   // Modelo de formulario de un comentario
   commentForm: FormGroup;
-  // Modelo de datos de un comentario
-  comment: Comment;
+  @ViewChild('fform') commentFormDirective;
 
   // Cadenas con los errores mostrados en cada campo del formulario. No hay errores para
   // "rating"
@@ -109,7 +108,25 @@ export class DishdetailComponent implements OnInit {
    * Llamado cuando el usuario pulsa el botón "Submit"
    */
   onSubmit() {
-    // TODO
+    // Mapeamos el modelo del formulario al modelo de datos. La fecha del comentario es creada en el
+    // momento
+    const comment: Comment = {
+      rating: this.commentForm.get('rating').value,
+      comment: this.commentForm.get('comment').value,
+      author: this.commentForm.get('author').value,
+      date: new Date().toISOString()
+    };
+
+    // Añadimos el nuevo comentario al plato
+    this.dish.comments.push(comment);
+
+    // Resteaoms el formulario a "pristine"
+    this.commentFormDirective.resetForm();
+
+    // Resteamos el formulario a su estado inicial
+    this.commentForm.reset({
+      rating: 5 // Valor por efecto
+    });
   }
 
   /**
