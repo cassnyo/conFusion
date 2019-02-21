@@ -17,6 +17,7 @@ export class DishdetailComponent implements OnInit {
 
   // Plato mostrado en los detalles
   dish: Dish;
+  errorMessage: string;
   // Ids de todos los platos almacenados del menu. Usado para la implementación "cutre"
   // de un ViewPager entre todos los platos
   dishIds: string[];
@@ -50,7 +51,7 @@ export class DishdetailComponent implements OnInit {
     private dishService: DishService,
     private route: ActivatedRoute,
     private location: Location,
-    private formBuilder: FormBuilder, 
+    private formBuilder: FormBuilder,
     @Inject('BaseURL') public BaseURL: String // Inyectamos el BaseURL desde el app.module en base al nombre del campo
   ) {
     this.createForm();
@@ -59,18 +60,22 @@ export class DishdetailComponent implements OnInit {
   ngOnInit() {
     // Get all dish ids
     this.dishService.getDishIds()
-      .subscribe((dishIds) => { this.dishIds = dishIds; });
+      .subscribe(
+        dishIds => this.dishIds = dishIds,
+        errorMessage => this.errorMessage = errorMessage
+      );
 
     // Nos suscribirmos a los params del routing que ha cargado la página, si estos cambian
     // (el dishId), se lanzará el observer y se refrescará el dish y el id previo/siguiente
     this.route.params
-      .pipe(
-        switchMap((params) => this.dishService.getDish(params['id']))
-      )
-      .subscribe((dish) => {
-        this.dish = dish;
-        this.setPrevNext(dish.id);
-      });
+      .pipe(switchMap((params) => this.dishService.getDish(params['id'])))
+      .subscribe(
+        dish => {
+          this.dish = dish;
+          this.setPrevNext(dish.id);
+        },
+        errorMessage => this.errorMessage = errorMessage
+      );
   }
 
   /**
