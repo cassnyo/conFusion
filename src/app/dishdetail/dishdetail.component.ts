@@ -1,12 +1,12 @@
-import { Component, OnInit, ViewChild, Inject } from '@angular/core';
-import { Params, ActivatedRoute } from '@angular/router';
-import { Dish } from '../shared/dish';
-import { DishService } from '../services/dish.service';
-import { Location } from '@angular/common';
-import { switchMap } from 'rxjs/operators';
-import { map } from 'rxjs/operators';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Comment } from '../shared/comment';
+import {Component, OnInit, ViewChild, Inject} from '@angular/core';
+import {Params, ActivatedRoute} from '@angular/router';
+import {Dish} from '../shared/dish';
+import {DishService} from '../services/dish.service';
+import {Location} from '@angular/common';
+import {switchMap} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
+import {FormGroup, FormBuilder, Validators} from '@angular/forms';
+import {Comment} from '../shared/comment';
 
 @Component({
   selector: 'app-dishdetail',
@@ -17,6 +17,9 @@ export class DishdetailComponent implements OnInit {
 
   // Plato mostrado en los detalles
   dish: Dish;
+  // Copia del plato modificado antes de ser enviado al servidor
+  dishcopy: Dish;
+
   errorMessage: string;
   // Ids de todos los platos almacenados del menu. Usado para la implementación "cutre"
   // de un ViewPager entre todos los platos
@@ -72,6 +75,7 @@ export class DishdetailComponent implements OnInit {
       .subscribe(
         dish => {
           this.dish = dish;
+          this.dishcopy = dish;
           this.setPrevNext(dish.id);
         },
         errorMessage => this.errorMessage = errorMessage
@@ -123,8 +127,21 @@ export class DishdetailComponent implements OnInit {
       date: new Date().toISOString()
     };
 
-    // Añadimos el nuevo comentario al plato
-    this.dish.comments.push(comment);
+    // Añadimos el nuevo comentario a la copia del plato (que será la que se envíe al servidor)
+    this.dishcopy.comments.push(comment);
+    this.dishService.putDish(this.dishcopy)
+      .subscribe(
+        dish => {
+          // Actualizamos dish y dishcopy con el dish insertado en la base e datos
+          this.dish = dish;
+          this.dishcopy = dish;
+        },
+        errorMessage => {
+          // Si ha habido un error, limpiamos ambas variables y mostramos el mensaje de error
+          this.dish = null;
+          this.dishcopy = null;
+          this.errorMessage = errorMessage;
+        });
 
     // Resteaoms el formulario a "pristine"
     this.commentFormDirective.resetForm();
@@ -141,7 +158,9 @@ export class DishdetailComponent implements OnInit {
    * @param data datos del formulario
    */
   onValueChanged(data?: any) {
-    if (!this.commentForm) { return; } // Si el formulario no ha sido creado, no continuamos
+    if (!this.commentForm) {
+      return;
+    } // Si el formulario no ha sido creado, no continuamos
     for (const field in this.formErrors) {
       if (this.formErrors.hasOwnProperty(field)) {
         // limpia el mensaje de error previo (de haberlo)
