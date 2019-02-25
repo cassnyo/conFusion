@@ -7,11 +7,35 @@ import {switchMap} from 'rxjs/operators';
 import {map} from 'rxjs/operators';
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 import {Comment} from '../shared/comment';
+import {animate, state, style, transition, trigger} from '@angular/animations';
 
 @Component({
   selector: 'app-dishdetail',
   templateUrl: './dishdetail.component.html',
-  styleUrls: ['./dishdetail.component.scss']
+  styleUrls: ['./dishdetail.component.scss'],
+  animations: [
+    // Detinimos un trigger de visibilidad. Este trigger tendrá dos estados, shwon y hidden
+    trigger('visibility', [
+        state(
+          'shown',
+          style({
+            transform: 'scale(1.0)',
+            opacity: 1
+          })
+        ),
+
+        state(
+          'hidden',
+          style({
+            transform: 'scale(0.5)',
+            opacity: 0
+          })
+        ),
+        // Ante cualquier cambio de estado (* => *), se hará una animación de 5 segundos
+        transition('* => *', animate('0.5s ease-in-out'))
+      ]
+    )
+  ]
 })
 export class DishdetailComponent implements OnInit {
 
@@ -30,6 +54,8 @@ export class DishdetailComponent implements OnInit {
   // Modelo de formulario de un comentario
   commentForm: FormGroup;
   @ViewChild('fform') commentFormDirective;
+
+  visibility = 'shown';
 
   // Cadenas con los errores mostrados en cada campo del formulario. No hay errores para
   // "rating"
@@ -71,12 +97,22 @@ export class DishdetailComponent implements OnInit {
     // Nos suscribirmos a los params del routing que ha cargado la página, si estos cambian
     // (el dishId), se lanzará el observer y se refrescará el dish y el id previo/siguiente
     this.route.params
-      .pipe(switchMap((params) => this.dishService.getDish(params['id'])))
+      .pipe(
+        switchMap(
+          params => {
+            // Al cargar un nuevo plato establecemos el estado 'hidden' para ocultar las vistas con la animación previamente declarada
+            this.visibility = 'hidden';
+            return this.dishService.getDish(params['id']);
+          }
+        )
+      )
       .subscribe(
         dish => {
           this.dish = dish;
           this.dishcopy = dish;
           this.setPrevNext(dish.id);
+          // Cuando ya tenemos el plato volvemos al estado 'shown' para mostrar las vistas con la animación declarada previamente
+          this.visibility = 'shown';
         },
         errorMessage => this.errorMessage = errorMessage
       );
