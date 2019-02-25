@@ -3,21 +3,20 @@
   <div fxFlex>
     <h3>Menu</h3>
     <hr>
-
-    <div *ngIf="dishes">
-      <mat-grid-list fxFlex cols="2" rowHeight="200px">
-        <mat-grid-tile *ngFor="let dish of dishes" [routerLink]="['/dishdetail', dish.id]" appHighlight>
-          <img height="200px" src="{{BaseURL  + dish.image}}" alt={{dish.name}}>
-          <mat-grid-tile-footer>
-            <h1> {{dish.name | uppercase}} </h1>
-          </mat-grid-tile-footer>
-        </mat-grid-tile>
-      </mat-grid-list>
-    </div>
-
   </div>
 
-  <div [hidden]="dishes || errorMessage">
+  <div fxFlex *ngIf="dishes" [@expand]>
+    <mat-grid-list cols="2" rowHeight="200px">
+      <mat-grid-tile *ngFor="let dish of dishes" [routerLink]="['/dishdetail', dish.id]" appHighlight>
+        <img height="200px" src="{{BaseURL  + dish.image}}" alt={{dish.name}}>
+        <mat-grid-tile-footer>
+          <h1> {{dish.name | uppercase}} </h1>
+        </mat-grid-tile-footer>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </div>
+
+  <div fxFlex [hidden]="dishes || errorMessage">
     <mat-spinner></mat-spinner>
     <h4>Loading ... Please wait</h4>
   </div>
