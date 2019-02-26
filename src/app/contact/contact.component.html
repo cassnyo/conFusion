@@ -7,6 +7,7 @@
     </div>
   </div>
 
+  <!-- location information -->
   <div fxFlex>
     <h3>Location Information</h3>
     <div fxLayout="column" fxLayout.gt-sm="row">
@@ -36,9 +37,9 @@
 
   <div fxFlex fxFlexOffset="20px" class="form-size">
     <h3>Send us your Feedback</h3>
-    <p>{{ feedbackForm.value | json }} {{ feedbackForm.status | json }}</p>
 
-    <form novalidate [formGroup]="feedbackForm" #fform="ngForm" (ngSubmit)="onSubmit()">
+    <!-- feedback form -->
+    <form novalidate [formGroup]="feedbackForm" #fform="ngForm" (ngSubmit)="onSubmit()" [hidden]="loading" *ngIf="!feedback">
       <p>
         <!-- First name -->
         <mat-form-field class="half-width">
@@ -92,6 +93,29 @@
       </p>
       <button type="submit" mat-button class="background-primary text-floral-white" [disabled]="feedbackForm.invalid">Submit</button>
     </form>
+
+    <!-- feedback sent information -->
+    <div *ngIf="feedback">
+      <h4>Your Submission</h4>
+
+      <p matLine>First name: {{feedback.firstname}}</p>
+      <p matLine>Last name: {{feedback.lastname}}</p>
+      <p matLine>Tel. Number: {{feedback.telnumber}}</p>
+      <p matLine>Email: {{feedback.email}}</p>
+      <p matLine>Contact You?: {{feedback.agree}}</p>
+      <p matLine>How?: {{feedback.contacttype}}</p>
+      <p matLine>Feedback: {{feedback.message}}</p>
+    </div>
+  </div>
+
+  <div fxFlex *ngIf="errorMessage">
+    <h2>Error</h2>
+    <h4>{{errorMessage}}</h4>
+  </div>
+
+  <div fxFlex [hidden]="!loading">
+    <h4>Submitting Form</h4>
+    <mat-spinner></mat-spinner>
   </div>
 
 </div>

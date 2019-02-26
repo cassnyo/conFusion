@@ -3,6 +3,8 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Feedback, ContactType} from '../shared/feedback';
 import {flyInOut} from '../animations/app.animation';
 import {FeedbackService} from '../services/feedback.service';
+import {delay} from 'rxjs/operators';
+import {pipe} from 'rxjs';
 
 @Component({
   selector: 'app-contact',
@@ -19,9 +21,11 @@ import {FeedbackService} from '../services/feedback.service';
 export class ContactComponent implements OnInit {
 
   feedbackForm: FormGroup;
-  feedback: Feedback;
   contactType = ContactType;
   @ViewChild('fform') feedbackFormDirective;
+  errorMessage: string;
+  loading: boolean;
+  feedback: Feedback;
 
   // Array de strings que contendrá todos los mensajes de error correspondientes
   // a cada input
@@ -64,6 +68,7 @@ export class ContactComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loading = false;
   }
 
   createForm() {
@@ -89,8 +94,27 @@ export class ContactComponent implements OnInit {
     // Copiamos el valor del modelo de formulario (FormGroup) a un modelo de datos (Feedback)
     // Esto podemos hacerlo porque ambos modelos son idénticos (mismos atributos), si fuesen diferentes
     // tendríamos que mapear cada atributo a mano
-    this.feedback = this.feedbackForm.value;
-    this.feedbackService.postFeedback(this.feedback);
+
+    this.postFeedback(this.feedbackForm.value);
+    this.resetForm();
+  }
+
+  postFeedback(newFeedback: Feedback) {
+    this.loading = true;
+    this.feedbackService.postFeedback(newFeedback)
+      .subscribe(
+        feedback => {
+          this.loading = false;
+          this.feedback = feedback;
+        },
+        errorMessage => {
+          this.loading = false;
+          this.errorMessage = errorMessage;
+        }
+      );
+  }
+
+  resetForm() {
     this.feedbackForm.reset({
       firstname: '',
       lastname: '',
