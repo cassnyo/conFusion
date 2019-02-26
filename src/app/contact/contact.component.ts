@@ -1,7 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Feedback, ContactType } from '../shared/feedback';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Feedback, ContactType} from '../shared/feedback';
 import {flyInOut} from '../animations/app.animation';
+import {FeedbackService} from '../services/feedback.service';
 
 @Component({
   selector: 'app-contact',
@@ -55,7 +56,10 @@ export class ContactComponent implements OnInit {
     }
   };
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private feedbackService: FeedbackService
+  ) {
     this.createForm();
   }
 
@@ -86,7 +90,7 @@ export class ContactComponent implements OnInit {
     // Esto podemos hacerlo porque ambos modelos son idénticos (mismos atributos), si fuesen diferentes
     // tendríamos que mapear cada atributo a mano
     this.feedback = this.feedbackForm.value;
-    console.log(this.feedback);
+    this.feedbackService.postFeedback(this.feedback);
     this.feedbackForm.reset({
       firstname: '',
       lastname: '',
@@ -100,7 +104,9 @@ export class ContactComponent implements OnInit {
   }
 
   onValueChanged(data?: any) {
-    if (!this.feedbackForm) { return; } // Si el formulario no ha sido creado, no continuamos
+    if (!this.feedbackForm) {
+      return;
+    } // Si el formulario no ha sido creado, no continuamos
     for (const field in this.formErrors) {
       if (this.formErrors.hasOwnProperty(field)) {
         // limpia el mensaje de error previo (de haberlo)
